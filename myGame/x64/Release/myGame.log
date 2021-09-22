@@ -1,36 +1,9 @@
 ﻿  Game.cpp
-D:\C++\SFML\myGame\myGame\myGame\Headers\Planet.h(9,39): warning C4305: инициализация: усечение из "double" в "float"
-D:\C++\SFML\myGame\myGame\myGame\Sources\Game.cpp(173,53): warning C4244: аргумент: преобразование "T" в "T", возможна потеря данных
-          with
-          [
-              T=float
-          ]
-          and
-          [
-              T=int
-          ]
-D:\C++\SFML\myGame\myGame\myGame\Sources\Game.cpp(172,53): warning C4244: аргумент: преобразование "T" в "T", возможна потеря данных
-          with
-          [
-              T=float
-          ]
-          and
-          [
-              T=int
-          ]
-D:\C++\SFML\myGame\myGame\myGame\Sources\Game.cpp(170,34): warning C4244: аргумент: преобразование "float" в "T", возможна потеря данных
-          with
-          [
-              T=int
-          ]
-D:\C++\SFML\myGame\myGame\myGame\Sources\Game.cpp(168,34): warning C4244: аргумент: преобразование "float" в "T", возможна потеря данных
-          with
-          [
-              T=int
-          ]
+  Planet.cpp
+  main.cpp
   Создание кода
-  0 of 408 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  3 of 413 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
   myGame.vcxproj -> D:\C++\SFML\myGame\myGame\x64\Release\myGame.exe

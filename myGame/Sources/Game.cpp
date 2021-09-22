@@ -8,6 +8,7 @@ Game::Game()
 	initStates();
 	initPlanets();
 	initFont();
+	initpInfo();
 
 	this->img.loadFromFile("assets/img/kosmos.jpg");
 	this->tex.loadFromImage(this->img);
@@ -25,8 +26,6 @@ Game::~Game()
 		delete planets.at(i);
 	delete pPlanet;
 }
-
-
 
 
 // Init functions
@@ -50,16 +49,20 @@ void Game::initPlanets()
 	std::string diameter = "0";
 	std::string distance = "0";
 	std::string daysAroundSun = "0";
+	std::string distanceFromSun = "0";
 
 	while (!ifs.eof()) {
 		ifs >> tempName;
 		ifs >> diameter;
 		ifs >> distance;
+		ifs >> distanceFromSun;
 		ifs >> daysAroundSun;
-		planets.push_back(new Planet(tempName, diameter, distance, daysAroundSun));
+		planets.push_back(new Planet(tempName, diameter, distance, distanceFromSun, daysAroundSun));
 	}
 
 	ifs.close();
+
+	this->pPlanet = new Planet();
 
 	std::cout << "initPlanets()\n";
 
@@ -72,43 +75,40 @@ void Game::initFont()
 	}
 }
 
-void Game::showPlanetInfo(Planet planet)
+void Game::initpInfo()
 {
 
-	planet.getSprite().setScale(0.5, 0.5);
-	planet.getSprite().setPosition(1600 - planet.getSprite().getGlobalBounds().width, 0);
-
-	sf::Text pName;
-	pName.setFont(this->font);
-	pName.setString(planet.getName());
-	pName.setCharacterSize(20);
+	pName.setFont(font);
+	pName.setCharacterSize(26);
 	pName.setFillColor(sf::Color::White);
-	pName.setPosition(1600 - 250, planet.getSprite().getGlobalBounds().height + 20);
+	pName.setPosition(1600 - 250, 400);
 
-	sf::Text pDiameter;
-	pDiameter.setFont(this->font);
-	pDiameter.setString("Diameter: " + std::to_string(int(planet.getDiameter())) + " km.");
-	pDiameter.setCharacterSize(20);
+
+	pDiameter.setFont(font);
+	pDiameter.setCharacterSize(26);
 	pDiameter.setFillColor(sf::Color::White);
-	pDiameter.setPosition(1600 - 250, planet.getSprite().getGlobalBounds().height + 40);
+	pDiameter.setPosition(1600 - 325, 425);
 
-
-	sf::Text pDistance;
-	pDistance.setFont(this->font);
-	pDistance.setString("Distance: " + std::to_string(int(planet.getDistance())) + " km.");
-	pDistance.setCharacterSize(20);
+	pDistance.setFont(font);
+	pDistance.setCharacterSize(26);
 	pDistance.setFillColor(sf::Color::White);
-	pDistance.setPosition(1600 - 250, planet.getSprite().getGlobalBounds().height + 60);
+	pDistance.setPosition(1600 - 325, 450);
 
+	pAroundSun.setFont(font);
+	pAroundSun.setCharacterSize(26);
+	pAroundSun.setFillColor(sf::Color::White);
+	pAroundSun.setPosition(1600 - 325, 475);
 
-
-	this->window->draw(planet.getSprite());
-	this->window->draw(pName);
-	this->window->draw(pDiameter);
-	this->window->draw(pDistance);
 
 }
 
+void Game::updatepInfo()
+{
+	pName.setString(pPlanet->getName());
+	pDiameter.setString("Diameter: " + std::to_string(pPlanet->getDiameter()) + " km.");
+	pDistance.setString("Distance: " + std::to_string(pPlanet->getDistanceFromSun()) + " mil. km.");
+	pAroundSun.setString("Around Sun: " + std::to_string(pPlanet->getAroundSun()) + " days");
+}
 
 
 
@@ -120,6 +120,17 @@ void Game::endApllication()
 	std::cout << "Endig application\n";
 }
 
+void Game::showPlanetInfo(Planet planet)
+{
+	updatepInfo();
+
+	this->window->draw(pPlanet->getSprite());
+	this->window->draw(pName);
+	this->window->draw(pDiameter);
+	this->window->draw(pDistance);
+	this->window->draw(pAroundSun);
+
+}
 
 void Game::run()
 {
@@ -130,6 +141,8 @@ void Game::run()
 		render();
 	}
 }
+
+// Update
 
 void Game::update()
 {
@@ -153,7 +166,6 @@ void Game::update()
 	}
 }
 
-
 void Game::updateSFMLEvents()
 {
 	while (this->window->pollEvent(this->sfEvent))
@@ -165,16 +177,18 @@ void Game::updateSFMLEvents()
 
 			for (size_t i = 0; i < this->planets.size(); i++) {
 				if (sf::IntRect(
-					this->planets[i]->getPosX() -
-					this->planets[i]->getSprite().getGlobalBounds().width / 2,
-					this->planets[i]->getPosY() -
-					this->planets[i]->getSprite().getGlobalBounds().height / 2,
-					this->planets[i]->getSprite().getGlobalBounds().width,
-					this->planets[i]->getSprite().getGlobalBounds().height).
+					int(this->planets[i]->getPosX() -
+						this->planets[i]->getSprite().getGlobalBounds().width / 2),
+					int(this->planets[i]->getPosY() -
+						this->planets[i]->getSprite().getGlobalBounds().height / 2),
+					(int)this->planets[i]->getSprite().getGlobalBounds().width,
+					(int)this->planets[i]->getSprite().getGlobalBounds().height).
 					contains(sf::Mouse::getPosition(*this->window))) {
 					//this->planets[i]->isClicked(this->dt);
 					this->isShowInf = true;
-					this->pPlanet = this->planets[i];
+
+					this->pPlanet->copy(this->planets[i]);
+					//this->pPlanet = this->planets[i];
 				}
 			}
 		}
@@ -183,13 +197,13 @@ void Game::updateSFMLEvents()
 	}
 }
 
-
-
 void Game::updateDt() {
 	this->dt = this->dtClock.restart().asSeconds();
 	//std::cout << this->dt;
 	//system("cls");
 }
+
+// Render
 
 void Game::render()
 {
@@ -202,7 +216,7 @@ void Game::render()
 
 	for (int i = 0; i < planets.size(); i++) {
 		this->window->draw(planets.at(i)->getSprite());
-		this->window->draw(planets.at(i)->getCircle());
+		//this->window->draw(planets.at(i)->getCircle());
 		//this->window->draw(planets.at(i)->getHeatBox());
 	}
 	if (isShowInf) this->showPlanetInfo(*pPlanet);

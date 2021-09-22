@@ -6,8 +6,9 @@
 #include <math.h>
 
 const float NORMAL_PLANET = 700;
-const float GRAD_TO_RAD = 3.1415 / 180;
+const float GRAD_TO_RAD = 3.14f / 180.f;
 const float NORMAL_GRAD =  365.f / 1000000.f;
+const float SPEED_RATIO = 90.f;
 
 
 #ifndef PLANET_H
@@ -33,17 +34,23 @@ private:
 	float posY_b;
 	float posX_n;
 	float posY_n;
-	float diameter;	
+	int diameter;	
 	float distance;
 	float grad = 30;
 	float velocity;
 	float dgrad;
-	float daysAroundSun;
+	int daysAroundSun;
+	int distanceFromSun;
 
 
 public:
-	Planet(std::string name,std::string diameter, std::string distance, std::string daysAroundSun);
+	Planet(std::string name,std::string diameter, std::string distance,
+		std::string daysAroundSun, std::string distanceFromSun);
+	Planet();
 	virtual ~Planet();
+
+	
+
 
 	// Init functions
 	void initPlanets();
@@ -51,18 +58,21 @@ public:
 	void initCircle();
 
 	// Functions
+
+	// Getters
 	std::string &getName();
-	float getDiameter();
-	float getDistance();
+	int getDiameter();
+	int getDistanceFromSun();
+	int getAroundSun();
+
+	float getPosX();
+	float getPosY();
 
 	sf::Sprite &getSprite();
 	sf::RectangleShape getHeatBox();
 	sf::CircleShape getCircle();
 
-	float getPosX();
-	float getPosY();
-	
-
+	// Setters
 	void setImage();
 	void setTexture();
 	void setSprite();
@@ -70,12 +80,16 @@ public:
 	void setSpriteScale();
 	sf::Vector2f setNormalPos();
 
+	// Actions with obj
 	void createObj();
 	void moveSprite();
 	void moveAround(const float& dt);
 
+	void copy( Planet* other);
+
 	sf::Sprite isClicked(const float& dt);
 	
+	// Update
 	void update(const float &dt);
 	
 };

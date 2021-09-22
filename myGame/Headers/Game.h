@@ -22,13 +22,20 @@ private:
 	std::stack<State*> states;
 	std::vector<Planet*> planets;
 	
+	// Variables for background
 	sf::Font font;
 	sf::Image img;
 	sf::Texture tex;
 	sf::Sprite spr;
 
-//	sf::Sprite t_spr;
+	// Temp planet info 
 	Planet* pPlanet;
+	sf::Text pName;
+	sf::Text pDiameter;
+	sf::Text pDistance;
+	sf::Text pAroundSun;
+
+
 	bool isShowInf;
 	
 
@@ -56,9 +63,13 @@ public:
 	void initHeatBoxes();
 	void initFont();
 
+	void initpInfo();
+
 	//void initCircle();
 	void showPlanetInfo(Planet planet);
-	
+	void updatepInfo();
+
+
 };
 
 
