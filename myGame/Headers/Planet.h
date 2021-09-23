@@ -30,6 +30,7 @@ private:
 
 
 	float scale;
+	float RATIO = 1;
 	float posX;
 	float posY;
 	float posX_b;
@@ -81,8 +82,10 @@ public:
 	void setTexture();
 	void setSprite();
 
-	void setSpriteScale();
+	
 	sf::Vector2f setNormalPos();
+	void scaleIncrease();
+	void scaleDecrease();
 
 	// Actions with obj
 	void createObj();
@@ -95,7 +98,9 @@ public:
 	
 	// Update
 	void update(const float &dt);
-	
+	void updateSpriteScale();
+	void updateVelocity();
+	void updatedGrad();
 };
 
 

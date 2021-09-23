@@ -32,8 +32,10 @@ private:
 	sf::Texture tex;
 	sf::Sprite spr;
 
-	// Temp planet info 
-	Planet* pPlanet;
+	
+	Planet* pPlanet;		/// temp planet to show full info about it
+	Planet* planetPointer;	/// temp pointer to change scale, velocity and dgrad
+
 	sf::Text pName;
 	sf::Text pDiameter;
 	sf::Text pDistance;

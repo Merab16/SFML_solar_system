@@ -21,12 +21,12 @@ Planet::Planet(std::string name, std::string diameter,
 
 	this->distanceFromSun = std::stoi(distanceFromSun);
 
-	this->velocity = float(this->diameter / this->daysAroundSun);
-	this->dgrad = this->velocity * this->velocity / (this->diameter / 2);
 
 
 	this->createObj();
-	this->setSpriteScale();
+	this->updateVelocity();
+	this->updatedGrad();
+	this->updateSpriteScale();
 
 	//this->initCircle();
 
@@ -76,7 +76,8 @@ void Planet::initCircle()
 void Planet::initText(sf::Font& font)
 {
 	posPlanet.setFont(font);
-	posPlanet.setCharacterSize(14);
+	//posPlanet.setOutlineThickness(0.5f);
+	posPlanet.setCharacterSize(15);
 	posPlanet.setFillColor(sf::Color::White);
 
 }
@@ -161,17 +162,22 @@ void Planet::setSprite()
 	this->sfSprite.setTexture(this->sfTexture);
 }
 
-void Planet::setSpriteScale()
-{
-	this->sfSprite.setScale(this->diameter / (NORMAL_PLANET * this->sfSprite.getGlobalBounds().width),
-		this->diameter / (NORMAL_PLANET * this->sfSprite.getGlobalBounds().width));
-}
-
 sf::Vector2f Planet::setNormalPos()
 {
 	this->posX_n = this->posX - this->sfSprite.getGlobalBounds().width / 2;
 	this->posY_n = this->posY - this->sfSprite.getGlobalBounds().height / 2;
 	return sf::Vector2f(this->posX_n, this->posY_n);
+}
+
+void Planet::scaleIncrease()
+{
+	this->RATIO += 0.05;
+
+}
+
+void Planet::scaleDecrease()
+{
+	this->RATIO -= 0.05;
 }
 
 
@@ -234,6 +240,27 @@ void Planet::update(const float& dt)
 	this->moveSprite();
 	this->initHeatBox();
 	this->moveAround(dt);
+
+
 }
+
+void Planet::updateSpriteScale()
+{
+	this->sfSprite.setScale(
+		this->RATIO * this->diameter / (NORMAL_PLANET * 700),
+		this->RATIO * this->diameter / (NORMAL_PLANET * 700));
+}
+
+void Planet::updateVelocity()
+{
+	this->velocity = this->RATIO * this->diameter / this->daysAroundSun;
+}
+
+void Planet::updatedGrad()
+
+{
+	this->dgrad = this->velocity * this->velocity / (this->diameter / 2);
+}
+
 
 

@@ -10,8 +10,8 @@ Game::Game()
 	initFont();
 	initPlanets();
 	initpInfo();
-	
-	
+
+
 
 
 
@@ -58,7 +58,7 @@ void Game::initPlanets()
 		ifs >> distanceFromSun;
 		ifs >> daysAroundSun;
 		planets.push_back(new Planet(tempName, diameter, distance, distanceFromSun, daysAroundSun));
-		
+
 		// Init text settings
 		planets.back()->initText(font);
 	}
@@ -190,6 +190,8 @@ void Game::updateSFMLEvents()
 		if (this->sfEvent.type == sf::Event::Closed)
 			this->window->close();
 
+		// Click on planet
+
 		if (sfEvent.type == sf::Event::MouseButtonPressed) {
 			this->isMousePressed = true;
 			for (size_t i = 0; i < this->planets.size(); i++) {
@@ -208,6 +210,9 @@ void Game::updateSFMLEvents()
 					else {
 						isShowInf = true;
 						pPlanet->copy(planets[i]);
+
+						// Pointer provides change scale, velocity and dgrad
+						planetPointer = planets[i];
 					}
 
 
@@ -218,10 +223,20 @@ void Game::updateSFMLEvents()
 		else if (sfEvent.type == sf::Event::MouseButtonReleased)
 			isMousePressed = false;
 
+		if (sfEvent.type == sf::Event::KeyPressed && isShowInf) {
+			if (sfEvent.key.code == sf::Keyboard::Up) {
+				planetPointer->scaleIncrease();
+			}
+			if (sfEvent.key.code == sf::Keyboard::Down) {
+				planetPointer->scaleDecrease();
+			}
 
 
 
-
+			planetPointer->updateSpriteScale();
+			planetPointer->updateVelocity();
+			planetPointer->updatedGrad();
+		}
 	}
 }
 
@@ -246,16 +261,16 @@ void Game::render()
 {
 	this->window->clear();
 	this->window->draw(this->spr);
-	
+
 	if (!this->states.empty()) {
 		this->states.top()->render(this->window);
 	}
 
-	for (int i = 0; i < planets.size(); i++) {
-		this->window->draw(planets[i]->getSprite());
+	for (auto item : planets) {
+		this->window->draw(item->getSprite());
 		//this->window->draw(planets.at(i)->getCircle());
 		//this->window->draw(planets[i]->getHeatBox());
-		this->window->draw(planets[i]->getPosPlanet());
+		this->window->draw(item->getPosPlanet());
 	}
 	if (isShowInf) this->showPlanetInfo(*pPlanet);
 
