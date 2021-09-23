@@ -6,14 +6,14 @@ Game::Game()
 {
 	initWindow();
 	initStates();
-	initPlanets();
+	initBackground();
 	initFont();
+	initPlanets();
 	initpInfo();
+	
+	
 
-	this->img.loadFromFile("assets/img/kosmos.jpg");
-	this->tex.loadFromImage(this->img);
-	this->spr.setTexture(this->tex);
-	this->spr.setScale(1600 / this->spr.getGlobalBounds().width, 900 / this->spr.getGlobalBounds().height);
+
 
 	std::cout << "Конструктор Game" << std::endl;
 }
@@ -58,12 +58,14 @@ void Game::initPlanets()
 		ifs >> distanceFromSun;
 		ifs >> daysAroundSun;
 		planets.push_back(new Planet(tempName, diameter, distance, distanceFromSun, daysAroundSun));
+		
+		// Init text settings
+		planets.back()->initText(font);
 	}
 
 	ifs.close();
 
 	this->pPlanet = new Planet();
-
 	std::cout << "initPlanets()\n";
 
 }
@@ -100,6 +102,17 @@ void Game::initpInfo()
 	pAroundSun.setPosition(1600 - 325, 475);
 
 
+	mousePos.setFont(font);
+	mousePos.setCharacterSize(14);
+	mousePos.setFillColor(sf::Color::White);
+}
+
+void Game::initBackground()
+{
+	this->img.loadFromFile("assets/img/kosmos5.jpg");
+	this->tex.loadFromImage(this->img);
+	this->spr.setTexture(this->tex);
+	this->spr.setScale(1600 / this->spr.getGlobalBounds().width, 900 / this->spr.getGlobalBounds().height);
 }
 
 void Game::updatepInfo()
@@ -132,6 +145,8 @@ void Game::showPlanetInfo(Planet planet)
 
 }
 
+
+// Run
 void Game::run()
 {
 	while (this->window->isOpen())
@@ -146,6 +161,7 @@ void Game::run()
 
 void Game::update()
 {
+	updateMousePos();
 	updateSFMLEvents();
 	for (size_t i = 0; i < this->planets.size(); i++) {
 		this->planets.at(i)->update(this->dt);
@@ -168,13 +184,14 @@ void Game::update()
 
 void Game::updateSFMLEvents()
 {
+
 	while (this->window->pollEvent(this->sfEvent))
 	{
 		if (this->sfEvent.type == sf::Event::Closed)
 			this->window->close();
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-
+		if (sfEvent.type == sf::Event::MouseButtonPressed) {
+			this->isMousePressed = true;
 			for (size_t i = 0; i < this->planets.size(); i++) {
 				if (sf::IntRect(
 					int(this->planets[i]->getPosX() -
@@ -183,15 +200,26 @@ void Game::updateSFMLEvents()
 						this->planets[i]->getSprite().getGlobalBounds().height / 2),
 					(int)this->planets[i]->getSprite().getGlobalBounds().width,
 					(int)this->planets[i]->getSprite().getGlobalBounds().height).
-					contains(sf::Mouse::getPosition(*this->window))) {
-					//this->planets[i]->isClicked(this->dt);
-					this->isShowInf = true;
+					contains(sf::Mouse::getPosition(*this->window)) && this->isMousePressed) {
 
-					this->pPlanet->copy(this->planets[i]);
-					//this->pPlanet = this->planets[i];
+					if (pPlanet->getName() == planets[i]->getName() && isShowInf) {
+						isShowInf = false;
+					}
+					else {
+						isShowInf = true;
+						pPlanet->copy(planets[i]);
+					}
+
+
+
 				}
 			}
 		}
+		else if (sfEvent.type == sf::Event::MouseButtonReleased)
+			isMousePressed = false;
+
+
+
 
 
 	}
@@ -203,25 +231,35 @@ void Game::updateDt() {
 	//system("cls");
 }
 
+void Game::updateMousePos()
+{
+	mPosX = sf::Mouse::getPosition(*this->window).x;
+	mPosY = sf::Mouse::getPosition(*this->window).y;
+	mousePos.setString(std::to_string(mPosX) + ';' + std::to_string(mPosY));
+	mousePos.setPosition(mPosX, mPosY - 20);
+}
+
+
 // Render
 
 void Game::render()
 {
 	this->window->clear();
 	this->window->draw(this->spr);
-
+	
 	if (!this->states.empty()) {
 		this->states.top()->render(this->window);
 	}
 
 	for (int i = 0; i < planets.size(); i++) {
-		this->window->draw(planets.at(i)->getSprite());
+		this->window->draw(planets[i]->getSprite());
 		//this->window->draw(planets.at(i)->getCircle());
-		//this->window->draw(planets.at(i)->getHeatBox());
+		//this->window->draw(planets[i]->getHeatBox());
+		this->window->draw(planets[i]->getPosPlanet());
 	}
 	if (isShowInf) this->showPlanetInfo(*pPlanet);
 
 
-
+	this->window->draw(mousePos);
 	this->window->display();
 }

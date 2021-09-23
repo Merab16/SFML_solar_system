@@ -23,7 +23,7 @@ Planet::Planet(std::string name, std::string diameter,
 
 	this->velocity = float(this->diameter / this->daysAroundSun);
 	this->dgrad = this->velocity * this->velocity / (this->diameter / 2);
-	
+
 
 	this->createObj();
 	this->setSpriteScale();
@@ -43,7 +43,7 @@ Planet::Planet()
 }
 
 
-	// Functions
+// Functions
 
 // Init
 
@@ -73,6 +73,14 @@ void Planet::initCircle()
 	this->circle.setPosition(-this->circle.getRadius(), -this->circle.getRadius());
 }
 
+void Planet::initText(sf::Font& font)
+{
+	posPlanet.setFont(font);
+	posPlanet.setCharacterSize(14);
+	posPlanet.setFillColor(sf::Color::White);
+
+}
+
 // Getters
 
 sf::Sprite& Planet::getSprite()
@@ -83,6 +91,19 @@ sf::Sprite& Planet::getSprite()
 sf::RectangleShape Planet::getHeatBox()
 {
 	return this->heatBox;
+}
+
+sf::Text Planet::getPosPlanet()
+{
+	this->posPlanet.setString(std::to_string(int(this->posX)) + ';'
+		+ std::to_string(int(this->posX)));
+
+	this->posPlanet.setPosition(this->posX +
+		1.2 * this->sfSprite.getGlobalBounds().width / 2,
+		this->posY - 1.1 * this->sfSprite.getGlobalBounds().height / 2);
+
+	return this->posPlanet;
+
 }
 
 sf::CircleShape Planet::getCircle()
@@ -211,7 +232,7 @@ void Planet::copy(Planet* other)
 void Planet::update(const float& dt)
 {
 	this->moveSprite();
-	//this->initHeatBox();
+	this->initHeatBox();
 	this->moveAround(dt);
 }
 

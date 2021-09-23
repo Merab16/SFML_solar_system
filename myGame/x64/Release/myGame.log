@@ -1,8 +1,8 @@
 ﻿  Game.cpp
-  Planet.cpp
-  main.cpp
+D:\C++\SFML\myGame\myGame\myGame\Sources\Game.cpp(239,36): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\C++\SFML\myGame\myGame\myGame\Sources\Game.cpp(239,23): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
   Создание кода
-  3 of 413 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
+  2 of 429 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     1 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено

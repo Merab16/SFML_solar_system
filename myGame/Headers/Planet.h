@@ -26,6 +26,8 @@ private:
 	sf::Sprite sfSprite;
 	sf::RectangleShape heatBox;
 	sf::CircleShape circle;
+	sf::Text posPlanet;
+
 
 	float scale;
 	float posX;
@@ -56,6 +58,7 @@ public:
 	void initPlanets();
 	void initHeatBox();
 	void initCircle();
+	void initText(sf::Font& font);
 
 	// Functions
 
@@ -70,6 +73,7 @@ public:
 
 	sf::Sprite &getSprite();
 	sf::RectangleShape getHeatBox();
+	sf::Text getPosPlanet();
 	sf::CircleShape getCircle();
 
 	// Setters

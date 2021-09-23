@@ -19,6 +19,10 @@ private:
 	sf::Clock dtClock;
 	float dt;
 
+	sf::Text mousePos;
+	int mPosX;
+	int mPosY;
+
 	std::stack<State*> states;
 	std::vector<Planet*> planets;
 	
@@ -37,8 +41,7 @@ private:
 
 
 	bool isShowInf;
-	
-
+	bool isMousePressed;
 
 
 public:
@@ -50,11 +53,19 @@ public:
 
 	void endApllication();
 
+	// Run
 	void run();
+
+	// Update
 	void update();
 	void updateSFMLEvents();
 	void updateDt();
+	void updatepInfo();
+	void updateMousePos();
+
+	// render
 	void render();
+	//void renderMousePos();
 
 	// Init functions
 	void initWindow();
@@ -62,12 +73,15 @@ public:
 	void initPlanets();
 	void initHeatBoxes();
 	void initFont();
+	void initBackground();
 
 	void initpInfo();
-
 	//void initCircle();
+
+
+
 	void showPlanetInfo(Planet planet);
-	void updatepInfo();
+	
 
 
 };
